@@ -1,14 +1,6 @@
-A quick brown fox jumps over the lazy dog. 
-
-int numbers = 50;
-string _word = Hello;
-
-2number
-number2
-number_2
-number-2
-
-int main () {
-cout << endl;
+int main() {
+int x, y;
+x = 5;
+cout << "Hello";
 return 0;
 }

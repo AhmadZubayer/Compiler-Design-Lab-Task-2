@@ -1,7 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cctype>
 using namespace std;
+
+struct Symbol {
+    string lexeme;
+    string tokenType;
+};
+
 
 string keywords[] = {
     "auto","break","case","char","const","continue","default","do","double",
@@ -11,16 +18,53 @@ string keywords[] = {
     "this","throw","try","typedef","union","unsigned","virtual","void",
     "volatile","while","class","bool","catch","using","true","false"
 };
-int keywordCount = sizeof(keywords) / sizeof(keywords[0]);
+string parenthesis[] = {"(", ")", "{", "}", "[", "]"};
+string operators[] = { "+", "-", "*", "/", "=", "==", "!=", "<", ">", "<=", ">=" };
+string separators[] = { ";", ",", ":" };
 
-bool isKeyword(string s)
-{
-    for (int i = 0; i < keywordCount; i++)
-    {
-        if (s == keywords[i])
-            return true;
+int keywordCount = sizeof(keywords) / sizeof(keywords[0]);
+int parenthesisCount = sizeof(parenthesis) / sizeof(parenthesis[0]);
+int operatorCount = sizeof(operators) / sizeof(operators[0]);
+int separatorCount = sizeof(separators) / sizeof(separators[0]);
+
+bool isStringLiteral(string s) {
+    return s.length() >= 2 && s.front() == '"' && s.back() == '"';
+}
+
+bool isKeyword(string s) {
+    if (!isStringLiteral(s)) {
+        for (int i = 0; i < keywordCount; i++) {
+            if (s == keywords[i]) return true;
+        }
+        return false;
     }
-    return false;
+}
+
+bool isParenthesis(string s) {
+    if (!isStringLiteral) {
+        for (int i = 0; i < parenthesisCount; i++) {
+            if (s == parenthesis[i]) return true;
+        }
+        return false;
+    }  
+}
+
+bool isOperator(string s) {
+    if (!isStringLiteral) {
+        for (int i = 0; i < operatorCount; i++) {
+            if (s == operators[i]) return true;
+        }
+        return false;
+    }  
+}
+
+bool isSeparator(string s) {
+    if (!isStringLiteral) {
+        for (int i = 0; i < separatorCount; i++) {
+            if (s == separators[i]) return true;
+        }
+        return false;
+    }
 }
 
 bool isIdentifier(string s)
@@ -37,43 +81,31 @@ bool isIdentifier(string s)
     return true;
 }
 
-int main()
-{
-    cout << "TEXT FILE IDENTIFIER CHECKER" << endl;
-    cout << endl;
+bool isConstant(string s) {
+    if (!isStringLiteral(s) && !isKeyword(s) && !isOperator(s) && !isSeparator(s) && !isParenthesis(s)) {
+        return true;
+    }
+}
+
+
+int main() {
+    cout << "LEXICAL ANALYZER & SYMBOL TABLE" << endl;
 
     ifstream inputFile("sample.txt");
-    if (inputFile.is_open())
-    {
-        string s;
-        cout << "Reading file contents:" << endl;
-        while (inputFile >> s)
-        {
-            cout << s << " ";
-        }
-        cout << endl << endl;
-
-        inputFile.clear();
-        inputFile.seekg(0);
-
-        cout << "Checking for identifiers:" << endl;
-        while (inputFile >> s)
-        {
-            if (isKeyword(s))
-                cout << "'" << s << "' -> KEYWORD" << endl;
-            else if (isIdentifier(s))
-                cout << "'" << s << "' -> IDENTIFIER" << endl;
-            else
-                cout << "'" << s << "' -> NOT IDENTIFIER" << endl;
-        }
-
-        inputFile.close();
-    }
-    else
-    {
+    if (!inputFile.is_open()) {
         cout << "Unable to open file" << endl;
+        return 0;
     }
 
-    cout << endl;
+
+    string word;
+    while (inputFile >> word) {
+       
+    }
+
+    inputFile.close();
+
+
+
     return 0;
 }
